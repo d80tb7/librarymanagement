@@ -1,19 +1,16 @@
 package sbt.internal.librarymanagement
 package ivyint
 
-import java.net.{ HttpURLConnection, URL, UnknownHostException }
+import java.net.{CookieManager, HttpURLConnection, URL, UnknownHostException}
 import java.io._
 
 import scala.util.control.NonFatal
-
-import okhttp3.{ MediaType, OkUrlFactory, Request, RequestBody }
+import okhttp3.{MediaType, OkUrlFactory, Request, RequestBody}
 import okhttp3.internal.http.HttpDate
-
 import okhttp3._
 import okio._
-
-import org.apache.ivy.util.{ CopyProgressEvent, CopyProgressListener, Message }
-import org.apache.ivy.util.url.{ AbstractURLHandler, BasicURLHandler, IvyAuthenticator, URLHandler }
+import org.apache.ivy.util.{CopyProgressEvent, CopyProgressListener, Message}
+import org.apache.ivy.util.url.{AbstractURLHandler, BasicURLHandler, IvyAuthenticator, URLHandler}
 import org.apache.ivy.util.url.URLHandler._
 import sbt.io.IO
 
@@ -220,6 +217,7 @@ object GigahorseUrlHandler {
       .underlying[OkHttpClient]
       .newBuilder()
       .authenticator(new JavaNetAuthenticator)
+      .cookieJar(new JavaNetCookieJar(new CookieManager()))
       .followRedirects(true)
       .followSslRedirects(true)
       .build
